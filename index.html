@@ -3,49 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DJ Event Helper | Request Box</title>
+    <title>DJ PRO | Event Helper</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-black text-white min-h-screen font-sans">
 
-    <header class="bg-zinc-900 py-6 text-center border-b border-yellow-500">
-        <h1 class="text-3xl font-extrabold text-yellow-500 tracking-widest">DJ PRO HELPER 🎧</h1>
-        <p class="text-gray-400 text-sm mt-1">Submit your requests or check BPM</p>
+    <header class="bg-zinc-900 py-8 text-center border-b border-yellow-500 shadow-lg">
+        <h1 class="text-4xl font-extrabold text-yellow-500 tracking-widest uppercase">DJ PRO HELPER 🎧</h1>
+        <p class="text-gray-400 text-sm mt-2 font-medium tracking-wide">Instant Song Requests & BPM Tool</p>
     </header>
 
-    <div class="max-w-md mx-auto p-6 space-y-8">
+    <div class="max-w-md mx-auto p-6 space-y-10">
         
-        <section class="bg-zinc-800 p-6 rounded-xl border border-zinc-700 shadow-xl">
-            <h2 class="text-xl font-bold mb-4 flex items-center">🎵 Song Request</h2>
-            <div class="space-y-3">
-                <input type="text" id="songName" placeholder="Song Name / Artist" class="w-full p-3 rounded bg-zinc-700 border-none text-white focus:ring-2 focus:ring-yellow-500">
-                <button onclick="sendRequest()" class="w-full bg-yellow-500 text-black font-bold py-3 rounded hover:bg-yellow-400 transition">Submit Request</button>
-            </div>
-            <p id="msg" class="text-green-400 text-sm mt-3 hidden text-center">Request sent to DJ! ✅</p>
+        <section class="bg-zinc-800 p-6 rounded-2xl border border-zinc-700 shadow-2xl">
+            <h2 class="text-xl font-bold mb-5 flex items-center text-yellow-500">
+                <span class="mr-2 underline">🎵</span> Request a Song
+            </h2>
+            
+            <form action="https://formspree.io/f/mlgplyzj" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1 ml-1 font-semibold uppercase">Song Name & Artist</label>
+                    <input type="text" name="Song_Name" placeholder="e.g. Shape of You - Ed Sheeran" required 
+                           class="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700 text-white focus:ring-2 focus:ring-yellow-500 outline-none transition duration-300">
+                </div>
+                
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1 ml-1 font-semibold uppercase">Your Name (Optional)</label>
+                    <input type="text" name="Requester_Name" placeholder="Your name" 
+                           class="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700 text-white focus:ring-2 focus:ring-yellow-500 outline-none transition duration-300">
+                </div>
+
+                <button type="submit" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:bg-yellow-400 active:scale-95 transition-all shadow-lg text-lg uppercase">
+                    SEND REQUEST
+                </button>
+            </form>
         </section>
 
-        <section class="bg-zinc-800 p-6 rounded-xl border border-zinc-700 shadow-xl text-center">
-            <h2 class="text-xl font-bold mb-4">🥁 BPM Tapper</h2>
-            <p class="text-gray-400 text-sm mb-4">Tap the button to the beat of the music</p>
-            <div id="bpmDisplay" class="text-5xl font-black text-yellow-500 mb-4">0</div>
-            <button onclick="tapBPM()" class="w-32 h-32 rounded-full bg-zinc-700 border-4 border-yellow-500 text-white font-bold text-lg hover:bg-zinc-600 active:scale-95 transition mx-auto flex items-center justify-center">TAP</button>
-            <button onclick="resetBPM()" class="block mt-4 text-xs text-gray-500 underline mx-auto">Reset</button>
+        <section class="bg-zinc-800 p-6 rounded-2xl border border-zinc-700 shadow-2xl text-center">
+            <h2 class="text-xl font-bold mb-2 text-yellow-500 flex justify-center items-center">
+                <span class="mr-2">🥁</span> BPM Tapper
+            </h2>
+            <p class="text-gray-400 text-[10px] mb-6 uppercase tracking-[0.2em] font-bold">Tap to match the beat</p>
+            
+            <div id="bpmDisplay" class="text-7xl font-black text-white mb-6 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">0</div>
+            
+            <button onclick="tapBPM()" class="w-44 h-44 rounded-full bg-zinc-900 border-[10px] border-yellow-500 text-yellow-500 font-black text-3xl hover:bg-zinc-700 active:scale-90 transition-all mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(234,179,8,0.1)]">
+                TAP
+            </button>
+            
+            <button onclick="resetBPM()" class="mt-8 text-[10px] text-zinc-500 hover:text-yellow-500 transition-colors underline underline-offset-4 uppercase tracking-widest font-bold">
+                Reset Counter
+            </button>
         </section>
 
     </div>
 
-    <script>
-        // Request logic
-        function sendRequest() {
-            const song = document.getElementById('songName').value;
-            if(song) {
-                document.getElementById('msg').classList.remove('hidden');
-                document.getElementById('songName').value = "";
-                setTimeout(() => { document.getElementById('msg').classList.add('hidden'); }, 3000);
-            }
-        }
+    <footer class="text-center py-12 text-zinc-600 text-[10px] tracking-[0.3em] font-bold uppercase">
+        Built by Semini Dinethma &bull; 2026
+    </footer>
 
-        // BPM Tapper logic
+    <script>
+        // BPM Counter Logic
         let taps = [];
         function tapBPM() {
             const now = Date.now();
@@ -59,7 +77,7 @@
                 const bpm = Math.round(60000 / avgInterval);
                 document.getElementById('bpmDisplay').innerText = bpm;
             }
-            if (taps.length > 10) taps.shift(); // Keep only last 10 taps for accuracy
+            if (taps.length > 12) taps.shift(); 
         }
 
         function resetBPM() {
